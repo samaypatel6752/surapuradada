@@ -4,7 +4,9 @@ const sql = require("mysql");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin:"http://localhost:3000"
+}));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -86,7 +88,9 @@ app.post("/api/book", (req, res) => {
     });
   }
 });
-
+app.get("/",(req,res)=>{
+  res.send('<h1>Sura Pura Dada Server</h1>')
+})
 app.get("/api/check", (req, res) => {
   const q1 = "SELECT entry from entry";
   db.query(q1, (err, result) => {
@@ -172,7 +176,7 @@ app.post("/api/verifier", (req, res) => {
   const name = req.body.name;
   const village = req.body.village;
   const phNo = req.body.phNo;
-  const task = req.body.task;
+  
   const tokenId = req.body.tokenId;
   const date = req.body.date;
   const key = req.body.key;
