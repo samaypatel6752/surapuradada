@@ -177,26 +177,12 @@ app.post("/api/verifier", (req, res) => {
   const date = req.body.date;
   const key = req.body.key;
   if (key === keyp) {
-    const q1 = `SELECT COUNT(*) as count FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and task='${task}' and tokenId='${tokenId}' and date='${date}';`;
+    const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
-      if (JSON.parse(JSON.stringify(result[0])).count === 1) {
-        res.send({
-          type: "success",
-          msg: true,
-        });
-      } else {
-        res.send({
-          msg: false,
-        });
-      }
-    });
-  } else {
-    res.send({
-      type: "Error",
-      msg: "Not found",
-    });
-  }
-});
+      res.send(JSON.parse(JSON.stringify(result[0])))
+    } )
+     
+}});
 
 app.listen(process.env.PORT||3001, () => {
   console.log("Running on http://localhost:3001");
