@@ -68,6 +68,8 @@ app.post("/api/book", (req, res) => {
                 await db.query(q3, (error3, result3) => {
                   
                   res.send({
+                    error:error3,
+                    reseult:result3,
                     type: "pass",
                     msg: "Booked",
                     data: {
