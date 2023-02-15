@@ -193,7 +193,7 @@ app.post("/api/verifier", (req, res) => {
     const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
       
-      res.send(result[0]);
+      res.send(result);
     });
   }
 });
