@@ -94,7 +94,7 @@ app.post("/api/book", (req, res) => {
   }
 });
 app.get("/",(req,res)=>{
-  res.send('<h1>Sura Pura Dada Server</h1>')
+  res.send('<h1>Sura Pura Dada Server V1</h1>')
 })
 app.get("/api/check", (req, res) => {
   const q1 = "SELECT entry from entry";
