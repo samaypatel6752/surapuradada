@@ -4,17 +4,14 @@ const sql = require("mysql");
 const bodyParser = require("body-parser");
 require("dotenv").config();
 const app = express();
-app.use(cors({
-  origin:"http://localhost:3000"
-}));
+app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(function(req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    next();
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
 });
-
 const keyp = "samay@6751@guru@bapasitaram_9898134603";
 
 const db = sql.createPool({
@@ -39,7 +36,7 @@ app.post("/api/book", (req, res) => {
 
   const date = yyyy + "-" + mm + "-" + dd;
   const time = new Date();
-  
+
   if (key === keyp) {
     let entry = [];
     const q1 = "SELECT * FROM entry;";
@@ -54,34 +51,38 @@ app.post("/api/book", (req, res) => {
         });
       } else {
         const q2 = `SELECT count(*) as tBook FROM bookings WHERE date=?;`;
-        db.query(q2, [date], (err, data) => {
+        db.query(q2, [date], (error1, data) => {
           if (JSON.parse(JSON.stringify(data[0])) >= entry[0].epd) {
             res.send({
               type: "fail",
               msg: "Currently booking is closed",
             });
             const q = "UPDATE entry SET entry='off'";
-            db.query(q, (err, data) => {});
+            db.query(q, (error2, data) => {});
           } else {
-            const q3 = `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
-              JSON.parse(JSON.stringify(data[0])).tBook + 1
-            }','${time}');`;
-
-            db.query(q3, (err, result3) => {
-              res.send({
-                type: "pass",
-                msg: "Booked",
-                data: {
-                  name: name,
-                  village: village,
-                  phNo: phNo,
-                  date: date,
-                  tokenId: JSON.parse(JSON.stringify(data[0])).tBook + 1,
-                  time: time,
-                  task: "n",
-                },
-              });
-            });
+              const addData = async ()=>{
+                const q3 = await `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
+                  JSON.parse(JSON.stringify(data[0])).tBook + 1
+                }','${time}');`;
+                
+                await db.query(q3, (error3, result3) => {
+                  
+                  res.send({
+                    type: "pass",
+                    msg: "Booked",
+                    data: {
+                      name: name,
+                      village: village,
+                      phNo: phNo,
+                      date: date,
+                      tokenId: JSON.parse(JSON.stringify(data[0])).tBook + 1,
+                      time: time,
+                      task: "n",
+                    },
+                  });
+                });
+              }
+              addData()
           }
         });
       }
@@ -94,7 +95,7 @@ app.post("/api/book", (req, res) => {
   }
 });
 app.get("/",(req,res)=>{
-  res.send('<h1>Sura Pura Dada Server V1</h1>')
+  res.send('<h1>Sura Pura Dada Server</h1>')
 })
 app.get("/api/check", (req, res) => {
   const q1 = "SELECT entry from entry";
