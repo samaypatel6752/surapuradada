@@ -7,9 +7,12 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
   next();
 });
 const keyp = "samay@6751@guru@bapasitaram_9898134603";
@@ -19,9 +22,9 @@ const db = sql.createPool({
   password: "1234567890",
   database: "surapura123",
   host: "db4free.net",
-  port:3306,
-  connectionLimit:100,
-  multipleStatements:true,
+  port: 3306,
+  connectionLimit: 100,
+  multipleStatements: true,
 });
 
 app.post("/api/book", (req, res) => {
@@ -60,31 +63,31 @@ app.post("/api/book", (req, res) => {
             const q = "UPDATE entry SET entry='off'";
             db.query(q, (error2, data) => {});
           } else {
-              const addData = async ()=>{
-                const q3 = await `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
+            const addData = async () => {
+              const q3 =
+                await `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
                   JSON.parse(JSON.stringify(data[0])).tBook + 1
                 }','${time}');`;
-                
-                await db.query(q3, (error3, result3) => {
-                  
-                  res.send({
-                    error:error3,
-                    reseult:result3,
-                    type: "pass",
-                    msg: "Booked",
-                    data: {
-                      name: name,
-                      village: village,
-                      phNo: phNo,
-                      date: date,
-                      tokenId: JSON.parse(JSON.stringify(data[0])).tBook + 1,
-                      time: time,
-                      task: "n",
-                    },
-                  });
+
+              await db.query(q3, (error3, result3) => {
+                res.send({
+                  error: error3,
+                  reseult: result3,
+                  type: "pass",
+                  msg: "Booked",
+                  data: {
+                    name: name,
+                    village: village,
+                    phNo: phNo,
+                    date: date,
+                    tokenId: JSON.parse(JSON.stringify(data[0])).tBook + 1,
+                    time: time,
+                    task: "n",
+                  },
                 });
-              }
-              addData()
+              });
+            };
+            addData();
           }
         });
       }
@@ -96,9 +99,9 @@ app.post("/api/book", (req, res) => {
     });
   }
 });
-app.get("/",(req,res)=>{
-  res.send('<h1>Sura Pura Dada Server</h1>')
-})
+app.get("/", (req, res) => {
+  res.send("<h1>Sura Pura Dada Server</h1>");
+});
 app.get("/api/check", (req, res) => {
   const q1 = "SELECT entry from entry";
   db.query(q1, (err, result) => {
@@ -109,12 +112,10 @@ app.post("/api/updateentry", (req, res) => {
   const key = req.body.key;
   const entry = req.body.entry;
   if (key === keyp) {
-    const q1 = `UPDATE entry SET entry='${entry==true? "on" : "off"}'`;
-    db.query(q1, (err, result) => {
-      
-    });
-  }else{
-    res.send({type:"error"})
+    const q1 = `UPDATE entry SET entry='${entry == true ? "on" : "off"}'`;
+    db.query(q1, (err, result) => {});
+  } else {
+    res.send({ type: "error" });
   }
 });
 app.post("/api/edit", (req, res) => {
@@ -184,18 +185,24 @@ app.post("/api/verifier", (req, res) => {
   const name = req.body.name;
   const village = req.body.village;
   const phNo = req.body.phNo;
-  
+
   const tokenId = req.body.tokenId;
   const date = req.body.date;
   const key = req.body.key;
   if (key === keyp) {
     const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
-      res.send(JSON.parse(JSON.stringify(result[0])))
-    } )
-     
-}});
+      if (JSON.parse(JSON.stringify(result[0])).task == "n") {
+        res.send({
+          task: "n",
+        });
+      } else {
+        res.send({ task: "c" });
+      }
+    });
+  }
+});
 
-app.listen(process.env.PORT||3001, () => {
+app.listen(process.env.PORT || 3001, () => {
   console.log("Running on http://localhost:3001");
 });
