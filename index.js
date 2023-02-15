@@ -27,7 +27,7 @@ const db = sql.createPool({
   multipleStatements:true,
 });
 
-app.update("/api/book", (req, res) => {
+app.post("/api/book", (req, res) => {
   const name = req.body.name;
   const village = req.body.village;
   const phNo = req.body.phNo;
