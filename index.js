@@ -9,6 +9,11 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(function(req, res, next) {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    next();
+});
 
 const keyp = "samay@6751@guru@bapasitaram_9898134603";
 
@@ -34,7 +39,7 @@ app.post("/api/book", (req, res) => {
 
   const date = yyyy + "-" + mm + "-" + dd;
   const time = new Date();
-
+  
   if (key === keyp) {
     let entry = [];
     const q1 = "SELECT * FROM entry;";
