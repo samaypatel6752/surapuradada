@@ -192,6 +192,11 @@ app.post("/api/verifier", (req, res) => {
   if (key === keyp) {
     const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
+      if (err){
+        res.send({
+          task:"c"
+        })
+      }
       if (JSON.parse(JSON.stringify(result[0])).task == "n") {
         res.send({
           task: "n",
