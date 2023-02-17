@@ -103,7 +103,7 @@ app.get("/", (req, res) => {
   res.send("<h1>Sura Pura Dada Server</h1>");
 });
 app.get("/api/check", (req, res) => {
-  const q1 = "SELECT entry from entry";
+  const q1 = "SELECT * from entry";
   db.query(q1, (err, result) => {
     res.send(JSON.parse(JSON.stringify(result[0])));
   });
@@ -111,13 +111,15 @@ app.get("/api/check", (req, res) => {
 app.post("/api/updateentry", (req, res) => {
   const key = req.body.key;
   const entry = req.body.entry;
+  const epd = req.body.epd;
   if (key === keyp) {
-    const q1 = `UPDATE entry SET entry='${entry == true ? "on" : "off"}'`;
+    const q1 = `UPDATE entry SET entry='${entry == true ? "on" : "off"}' and epd='${epd}'`;
     db.query(q1, (err, result) => {});
   } else {
     res.send({ type: "error" });
   }
 });
+
 app.post("/api/edit", (req, res) => {
   const key = req.body.key;
   const name = req.body.name;
@@ -193,7 +195,7 @@ app.post("/api/verifier", (req, res) => {
     const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
       
-      res.send(result);
+      res.send(result[0]);
     });
   }
 });
