@@ -113,8 +113,10 @@ app.post("/api/updateentry", (req, res) => {
   const entry = req.body.entry;
   const epd = req.body.epd;
   if (key === keyp) {
-    const q1 = `UPDATE entry SET entry='${entry == true ? "on" : "off"}' and epd='${epd}'`;
+    const q1 = `UPDATE entry SET entry='${entry == true ? "on" : "off"}'`;
+    const q2 = `UPDATE entry SET epd='${epd}'`;
     db.query(q1, (err, result) => {});
+    db.query(q2, (err, result) => {});
   } else {
     res.send({ type: "error" });
   }
