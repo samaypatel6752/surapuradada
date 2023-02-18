@@ -56,7 +56,6 @@ app.post("/api/book", (req, res) => {
       } else {
         const q2 = `SELECT count(*) as tBook FROM bookings WHERE date=?;`;
         db.query(q2, [date], (error1, data) => {
-          
           if (JSON.parse(JSON.stringify(data[0])).tBook >= entry[0].epd) {
             res.send({
               type: "fail",
@@ -66,26 +65,28 @@ app.post("/api/book", (req, res) => {
             db.query(q, (error2, data) => {});
           } else {
             const addData = async () => {
-              const q3 =
-                await `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
-                  JSON.parse(JSON.stringify(data[0])).tBook + 1
+              const q6 = "SELECT MAX(tokenId) as tBook FROM bookings WHERE date=?";
+              db.query(q6, [date], (error3, result) => {
+                const q3 = `INSERT INTO bookings (name,village,phNo,date,task,tokenId,time) values ('${name}','${village}','${phNo}','${date}',"n",'${
+                  JSON.parse(JSON.stringify(result[0])).tBook + 1
                 }','${time}');`;
 
-              await db.query(q3, (error3, result3) => {
-                res.send({
-                  error: error3,
-                  reseult: result3,
-                  type: "pass",
-                  msg: "Booked",
-                  data: {
-                    name: name,
-                    village: village,
-                    phNo: phNo,
-                    date: date,
-                    tokenId: JSON.parse(JSON.stringify(data[0])).tBook + 1,
-                    time: time,
-                    task: "n",
-                  },
+                db.query(q3, (error3, result3) => {
+                  res.send({
+                    error: error3,
+                    reseult: result3,
+                    type: "pass",
+                    msg: "Booked",
+                    data: {
+                      name: name,
+                      village: village,
+                      phNo: phNo,
+                      date: date,
+                      tokenId: JSON.parse(JSON.stringify(result[0])).tBook + 1,
+                      time: time,
+                      task: "n",
+                    },
+                  });
                 });
               });
             };
@@ -224,10 +225,10 @@ app.post("/api/verifier", (req, res) => {
     const q1 = `SELECT task FROM bookings WHERE name='${name}' and village='${village}' and phNo='${phNo}' and tokenId='${tokenId}' and date='${date}';`;
     db.query(q1, (err, result) => {
       res.send(result[0]);
-      if (err){
+      if (err) {
         res.send({
-          task:"c"
-        })
+          task: "c",
+        });
       }
     });
   }
