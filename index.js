@@ -149,6 +149,31 @@ app.post("/api/edit", (req, res) => {
     });
 });
 
+app.post("/api/delete", (req, res) => {
+  const key = req.body.key;
+  const name = req.body.name;
+  const phNo = req.body.phNo;
+  const tokenNo = req.body.tokenId;
+  const date = req.body.date;
+  const q = req.body.q;
+  var today = new Date(date);
+  var dd = String(today.getDate()).padStart(2, "0");
+  var mm = String(today.getMonth() + 1).padStart(2, "0"); //January is 0!
+  var yyyy = today.getFullYear();
+  const Ndate = yyyy + "-" + mm + "-" + dd;
+
+  if (key === keyp) {
+    const q1 = `DELETE FROM bookings WHERE task='${q}' where tokenId='${tokenNo}' and name='${name}' and phNo='${phNo}' and date='${Ndate}';`;
+    db.query(q1, (err, result) => {});
+    res.send({
+      type: "error",
+    });
+  } else
+    res.send({
+      type: "error",
+    });
+});
+
 app.post("/api/todayentry", (req, res) => {
   const key = req.body.key;
 
