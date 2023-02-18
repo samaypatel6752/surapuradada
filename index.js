@@ -47,6 +47,7 @@ app.post("/api/book", (req, res) => {
       for (i in result) {
         entry = [...entry, JSON.parse(JSON.stringify(result[i]))];
       }
+      console.log(entry);
       if (entry[0].entry == "off") {
         res.send({
           type: "fail",
@@ -55,7 +56,8 @@ app.post("/api/book", (req, res) => {
       } else {
         const q2 = `SELECT count(*) as tBook FROM bookings WHERE date=?;`;
         db.query(q2, [date], (error1, data) => {
-          if (JSON.parse(JSON.stringify(data[0])) >= entry[0].epd) {
+          
+          if (JSON.parse(JSON.stringify(data[0])).tBook >= entry[0].epd) {
             res.send({
               type: "fail",
               msg: "Currently booking is closed",
