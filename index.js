@@ -163,7 +163,7 @@ app.post("/api/delete", (req, res) => {
   const Ndate = yyyy + "-" + mm + "-" + dd;
 
   if (key === keyp) {
-    const q1 = `DELETE FROM bookings WHERE task='${q}' where tokenId='${tokenNo}' and name='${name}' and phNo='${phNo}' and date='${Ndate}';`;
+    const q1 = `DELETE FROM bookings WHERE task='${q}' and tokenId='${tokenNo}' and name='${name}' and phNo='${phNo}' and date='${Ndate}';`;
     db.query(q1, (err, result) => {});
     res.send({
       type: "error",
